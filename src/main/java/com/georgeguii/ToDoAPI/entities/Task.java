@@ -1,5 +1,6 @@
 package com.georgeguii.ToDoAPI.entities;
 
+import com.georgeguii.ToDoAPI.dtos.TaskRequestDTO;
 import com.georgeguii.ToDoAPI.enums.EStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,16 +21,25 @@ import java.time.LocalDateTime;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String title;
 
-    @Column(length = 256)
+    @Column(length = 256, nullable = false)
     private String description;
 
     private EStatus status;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    public Task(TaskRequestDTO requestDTO) {
+        this.title = requestDTO.title();
+        this.description = requestDTO.description();
+        this.status = EStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
+    };
+
 }
