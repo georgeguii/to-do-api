@@ -43,8 +43,16 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable UUID id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity update(@PathVariable UUID id, @RequestBody TaskRequestDTO requestDTO) {
+        var result = taskService.update(id, requestDTO);
 
+        if (result == null) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Nenhuma tarefa com o id informado foi encontrada.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        }
+
+        return ResponseEntity.ok(result);
     }
 }

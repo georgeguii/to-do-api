@@ -7,5 +7,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TaskRepository extends JpaRepository<Task, UUID> {
-    public Optional<Task> getTaskById(UUID id);
 }
