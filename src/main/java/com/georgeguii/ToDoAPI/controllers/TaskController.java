@@ -55,4 +55,27 @@ public class TaskController {
 
         return ResponseEntity.ok(result);
     }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity updateStatus(@PathVariable UUID id) {
+        var result = taskService.updateStatus(id);
+        if (result == null) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Nenhuma tarefa com o id informado foi encontrada.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable UUID id) {
+        var isDeleted = taskService.delete(id);
+        if (!isDeleted) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Nenhuma tarefa com o id informado foi encontrada.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -4,6 +4,7 @@ import com.georgeguii.ToDoAPI.dtos.GetAllTaskResponseDTO;
 import com.georgeguii.ToDoAPI.dtos.GetTaskByIdResponseDTO;
 import com.georgeguii.ToDoAPI.dtos.TaskRequestDTO;
 import com.georgeguii.ToDoAPI.entities.Task;
+import com.georgeguii.ToDoAPI.enums.EStatus;
 import com.georgeguii.ToDoAPI.repositories.TaskRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,22 @@ public class TaskService {
         return new GetTaskByIdResponseDTO(task);
     }
 
+    public GetTaskByIdResponseDTO updateStatus(UUID id) {
+        var result = taskRepository.findById(id);
+        if(result.isEmpty()) { return null; }
+
+        var task = result.get();
+
+        task.setStatus(EStatus.COMPLETED);
+        var updatedTask = taskRepository.save(task);
+        return new GetTaskByIdResponseDTO(updatedTask);
+    }
+
+    public boolean delete(UUID id) {
+        var result = taskRepository.findById(id);
+        if(result.isEmpty()) { return false; }
+        taskRepository.delete(result.get());
+        return true;
+    }
 
 }
